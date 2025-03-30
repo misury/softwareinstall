@@ -1,7 +1,6 @@
 <#
 # Windows Software Installer - Full Version
 # Compatible with Boxstarter
-
 #>
 
 # Self-elevate the script if not running as administrator
