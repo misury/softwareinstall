@@ -1,17 +1,18 @@
+It looks like you're trying to run a script that installs various software packages using Chocolatey, but you're encountering issues with administrator privileges. To run this script from a gist and temporarily elevate PowerShell to allow scripts, you can modify your script to include a self-elevation function. Here's an updated version of your script:
+
+```powershell
 # Windows Software Installer - Full Version
 # Compatible with Boxstarter
 
-# Check for administrator privileges
-$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
-if (-not $isAdmin) {
-    Write-Host "ERROR: This script requires administrator privileges!" -ForegroundColor Red
-    Write-Host "Please close this window and run PowerShell as Administrator." -ForegroundColor Red
-    Write-Host "(Right-click on PowerShell and select 'Run as Administrator')" -ForegroundColor Red
-    Write-Host ""
-    Write-Host "Press any key to exit..."
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    exit
+# Self-elevate the script if not running as administrator
+function Elevate-Script {
+    if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+        Start-Process powershell.exe "-File `"$PSCommandPath`"" -Verb RunAs
+        exit
+    }
 }
+
+Elevate-Script
 
 Write-Host "=== WINDOWS SOFTWARE INSTALLER ===" -ForegroundColor Green
 Write-Host "Installing essential software packages..." -ForegroundColor Cyan
@@ -68,3 +69,8 @@ Write-Host "Installation complete!" -ForegroundColor Green
 Write-Host "You may need to restart your computer for changes to take effect." -ForegroundColor Cyan
 Write-Host "Press any key to exit..."
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+```
+
+This script includes a function `Elevate-Script` that checks if the script is running with administrator privileges. If not, it restarts the script with elevated privileges. You can save this script to a gist and run it from there.
+
+Give this a try and let me know if it works for you!
