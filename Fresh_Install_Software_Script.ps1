@@ -26,6 +26,7 @@ choco install git -y --no-progress
 choco install wget -y --no-progress
 choco install unzip -y --no-progress
 choco install tailscale -y --no-progress
+choco install adobereader -y --no-progress
 
 # Browsers
 Write-Host "Installing Browsers..." -ForegroundColor Yellow
